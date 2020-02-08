@@ -4,50 +4,143 @@
   <title>my communite</title>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" href="layui/css/layui.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link  rel="stylesheet" href="css/community_publish.css" />
 </head>
 <body>
+	<!--头部-->
+<div id="header"></div>
 
-<ul class="layui-nav" lay-filter="">
-  <li class="layui-nav-item">校友社区</li>
-  <li class="layui-nav-item layui-this layui-col-md-offset1"><a href="">产品</a></li>
-  <li class="layui-nav-item"><a href="">大数据</a></li>
-  <li class="layui-nav-item">
-    <a href="javascript:;">解决方案</a>
-    <dl class="layui-nav-child"> <!-- 二级菜单 -->
-      <dd><a href="">移动模块</a></dd>
-      <dd><a href="">后台模版</a></dd>
-      <dd><a href="">电商平台</a></dd>
-    </dl>
-  </li>
-  <li class="layui-nav-item"><a href="">社区</a></li>
+<!--内容区-->
+<!--内容区-->
+<div class="layui-container main">
+	<div class="layui-row">
+		<div class="layui-col-xs12 layui-col-sm12 layui-col-md9">
+			<br/>
+			<i class="layui-icon layui-icon-cols" style="font-size: 20px; color: gray;"> &nbsp;&nbsp;发现</i>
+			<i class="layui-icon layui-icon-search layui-col-md-offset5" > 
+			<form action="http://cn.bing.com/search" class="fly-search">
+			  <input class="layui-input " autocomplete="off" placeholder="搜索内容，回车跳转" type="text" name="q">
+			</form></i>
+			<a href="/publish" class="layui-btn ">发布问题</a>
+			<div class="layui-tab">
+			  <ul class="layui-tab-title">
+			    <li class="layui-this">最新</li>
+			    <li>推荐</li>
+			    <li>最热</li>
+			    <li>消灭零回复</li>
+			  </ul>
+			 
+			  <input hidden id="curr" th:value="${pageDTO.curr}">
+				<input hidden id="page" th:value="${pageDTO.pages}">
+				<input hidden id="count" th:value="${pageDTO.count}">
 
+				<div class="layui-tab-content">
+			    <div class="layui-tab-item layui-show">
+						<ul class="fly-list" th:each="question:${pageDTO.data}">
+							<li class="fly-list-li">
+								<a href="user/home.html" class="fly-list-avatar">
+									<img th:src="@{${question.user.avatarUrl}}" alt="" />
+								</a>
+								<h2 class="fly-tip">
+									<a th:href="@{'/detail?questionid='+${question.question.id}}"><span th:text="${question.question.title}"></span></a>
+									<span class="fly-tip-stick">置顶</span>
+									<span class="fly-tip-jing">精帖</span>
+								</h2>
+								<p>
+									<span><a href="user/home.html"><span th:text="${question.user.name}"></span></a></span>
+									<span>刚刚</span>
+									<span th:text="${question.question.tag}"></span>
+									<span class="fly-list-hint">
+					        <i class="iconfont" title="回答">&#xe60c;</i> 317
+					        <i class="iconfont" title="人气">&#xe60b;</i> 6830
+					      </span>
+								</p>
+							</li>
+						</ul>
+						<div id="fenye"></div>
+				</div>
+			    <div class="layui-tab-item">内容2</div>
+			    <div class="layui-tab-item">内容3</div>
+			    <div class="layui-tab-item">内容4</div>
+			  </div>
+			  
+			</div>  
+		</div>
+		<div class="layui-col-xs12 layui-col-sm12 layui-col-md3">
+			<br/>
+			<h2>最新消息</h2>
+			<div class="layui-collapse">
+				<div class="layui-colla-item">
+				<h2 class="layui-colla-title">杜甫</h2>
+				<div class="layui-colla-content layui-show">内容区域</div>
+			</div>
+				<div class="layui-colla-item">
+					<h2 class="layui-colla-title">李清照</h2>
+					<div class="layui-colla-content layui-show">内容区域</div>
+				</div>
+				<div class="layui-colla-item">
+					<h2 class="layui-colla-title">鲁迅</h2>
+					<div class="layui-colla-content layui-show">内容区域</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-  <li class="layui-nav-item">
-    <a href="">个人中心<span class="layui-badge-dot"></span></a>
-  </li>
-  <li class="layui-nav-item layui-col-md-offset5">
-    <a href="">登录</a>
-  </li>
-  <li class="layui-nav-item">
-    <a href=""><img src="//t.cn/RCzsdCq" class="layui-nav-img">我</a>
-    <dl class="layui-nav-child">
-      <dd><a href="javascript:;">修改信息</a></dd>
-      <dd><a href="javascript:;">安全管理</a></dd>
-      <dd><a href="javascript:;">退了</a></dd>
-    </dl>
-  </li>
-</ul>
-
-
+<!--底部-->
+<div id="footer"></div>
 
 <script src="layui/layui.js" ></script>
 <script>
   //注意：导航 依赖 element 模块，否则无法进行功能性操作
-  layui.use('element', function(){
+  layui.use(['element','jquery','laypage'], function(){
     var element = layui.element;
-
+     var $ = layui.jquery;
+     var laypage = layui.laypage;
+	$("#header").load("/header");
+	$("#footer").load("/footer");
     //…
+		var laypage = layui.laypage;
+
+		var cur = $("#curr").val();
+		var size = $("#page").val();
+		var num = $("#count").val();
+
+		laypage.render({
+			elem: 'fenye'
+			,count:num
+			,limit:size
+			,curr:cur
+			,layout: ['count', 'prev', 'page', 'next', 'limit']
+			,jump: function(obj,first){
+				if(!first){
+					window.location="/?curr="+obj.curr+"&size="+obj.limit;
+				}
+					// var req = {curr:obj.curr,pages:obj.limit}
+					// console.log(obj);
+					// $.ajax({
+					// 	url: '/',
+					// 	type: 'get',
+					// 	method: 'get',
+					// 	data: {
+					// 		curr:obj.curr,
+					// 		size:obj.limit
+					// 	},
+					// 	success: function () {
+					//
+					// 	},
+					// 	error: function (data) {
+					// 		 alert("异步请求失败");
+					// 	}
+					// });
+			}
+
+		});
   });
+</script>
+<script>
+	 
 </script>
 </body>
 </html>

@@ -1,0 +1,41 @@
+<div class="header " >
+<ul class="layui-nav layui-col-xs6 layui-col-sm6 layui-col-md8 layui-col-md-offset2" lay-filter="">
+  <li class="layui-nav-item"><a href="/">校友社区</a></li>
+  <li class="layui-nav-item layui-this layui-col-md-offset1"><a href="">产品</a></li>
+  <li class="layui-nav-item"><a href="">大数据</a></li>
+  <li class="layui-nav-item">
+    <a href="javascript:;">解决方案</a>
+    <dl class="layui-nav-child"> <!-- 二级菜单 -->
+      <dd><a href="">移动模块</a></dd>
+      <dd><a href="">后台模版</a></dd>
+      <dd><a href="">电商平台</a></dd>
+    </dl>
+  </li>
+  <li class="layui-nav-item"><a href="">社区</a></li>
+
+
+ 
+  <div class="nav-user" th:if="${session.user==null}">
+      <!-- 未登入状态 -->
+     <a class="unlogin" href="user/login.html"><i class="layui-icon layui-icon-username headertubiao" ></i></a>
+      <span><a href="user/login.html">登入</a><a href="user/reg.html">注册</a></span>
+      <p class="out-login">
+        <a href="" onclick="layer.msg('正在通过QQ登入', {icon:16, shade: 0.1, time:0})" class="layui-icon layui-icon-login-qq" title="QQ登入"></a>
+        <a href="https://github.com/login/oauth/authorize?client_id=5f57e6278bddc120b3b1&redirect_id=http://localhost:8887/callback&scope=user&state=1" onclick="layer.msg('正在通过gitHub登入', {icon:16, shade: 0.1, time:0})" class="layui-icon layui-icon-login-weibo" title="微博登入"></a>
+      </p>  
+    </div>
+	
+	
+	<div class="nav-user" th:if="${session.user!=null}">
+	<!-- 登入后的状态 -->
+	<a class="avatar" href="user/index.html">
+	  <img th:src="@{${session.user.avatarUrl}}">
+	  <cite th:text="${session.user.getName()}">贤心</cite>
+	</a>
+	<div class="nav">
+	  <a href="/user/set/"><i class="layui-icon layui-icon-set-fill"></i>设置</a>
+	  <a href="/user/logout/"><i class="layui-icon layui-icon-close-fill"></i>退了</a>
+	</div>
+	</div>
+</ul>
+</div>
