@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>my communite</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/css/global.css">
+</head>
+<body>
+	<!--头部-->
+<div id="header"></div>
+
+<!--内容区-->
+<div class="fly-home" style="background-image: url();">
+  <img th:src="@{${user.avatarUrl}}" alt="{{info.username}}">
+  <h1 th:text="${user.getName()}">贤心
+  <i class="layui-icon layui-icon-male"></i> 
+  <!-- <i class="iconfont icon-nv"></i> -->
+  
+  <!-- <span style="color:#c00;">（超级码农）</span>
+  <span style="color:#5FB878;">（活雷锋）</span>
+  <span>（该号已被封）</span> -->
+  </h1>
+  <div class="layui-main">
+    <p style="display: inline-block; max-width: 800px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #999; margin-top: 10px;">
+      这个人懒得留下签名
+    </p>
+  </div>
+  <!--<div class="fly-sns">
+    <span lay-event="">添加好友</span>
+  </div>-->
+  <p style="padding: 10px 0; color: #5FB878;">认证信息：layui 作者</p>
+
+  <p class="fly-home-info">
+    <i class="layui-icon layui-icon-rmb"></i>拥有飞吻：<span style="color: #FF7200;">5200</span>
+    <i class="layui-icon layui-icon-date"></i>加入时间：<span>2016-10-26</span>
+    <i class="layui-icon layui-icon-location"></i>城市：<span>杭州</span>
+  </p>
+
+  <p class="fly-home-sign">（人生仿若一场修行）</p>
+
+  <div class="fly-sns" data-user="">
+    <a href="javascript:;" class="layui-btn layui-btn-primary fly-imActive" data-type="addFriend">加为好友</a>
+    <a href="javascript:;" class="layui-btn layui-btn-normal fly-imActive" data-type="chat">发起会话</a>
+  </div>
+
+</div>
+
+<div class="main layui-clear">
+  <div class="fly-main layui-clear">
+  
+    <div class="home-nav">
+      <a href="">主页</a>
+      <!--<a href="">求解</a>-->
+    </div>
+    <div class="home-left">
+      <h2>最近发表的求解</h2>
+      <ul class="jie-row">
+        <li th:each="question:${questions}">
+          <span class="fly-jing" >精</span>
+          <span class="jie-status jie-status-ok">已解决</span>
+          <!-- <span class="jie-status">求解中</span> -->
+          <a href="/jie/{{item.id}}.html" th:text="${question.title}">图标字体的动画为什么不会动呢</a>
+          <i>刚刚</i>
+          <em><p th:text="${question.viewCount}"></p>阅/12答</em>
+        </li>
+
+        <!-- <li class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><i style="font-size:14px;">没有发表任何求解</i></li> -->
+      </ul>
+      
+
+    </div>
+    <div class="home-right">
+      <h2 style="margin-top:30px;">最近的回答</h2>
+      <ul class="home-jieda">
+        <li>
+          <p>
+            <span>1分钟前</span>
+            在<a href="" target="_blank">tips能同时渲染多个吗?</a>中回答：
+          </p>
+          <div class="home-dacontent">
+            当然可以的呀
+          </div>
+        </li>
+
+        <!-- <li class="fly-none" style="min-height: 50px; padding:30px 0; height:auto;"><span>没有回答任何问题</span></li> -->
+      </ul>
+    </div>
+  </div>
+</div>
+
+
+<!--底部-->
+<div id="footer"></div>
+
+<script src="/layui/layui.js" ></script>
+<script>
+  //注意：导航 依赖 element 模块，否则无法进行功能性操作
+  layui.use(['element','jquery'], function(){
+    var element = layui.element;
+     var $ = layui.jquery;
+	$("#header").load("/header");
+	$("#footer").load("/footer");
+	
+  });
+</script>
+<script>
+	 
+</script>
+</body>
+</html>

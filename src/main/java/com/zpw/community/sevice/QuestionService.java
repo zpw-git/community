@@ -15,8 +15,15 @@ public interface QuestionService {
 
   List<QuestionDTO> queryAllQuestioin();
 
-  QuestionDTO queryById(Integer id);
+  QuestionDTO queryById(Long id);
 
   PageDTO pageQuery(Integer curr,Integer num);
 
+  List<Question> queryByCreator(String Creator);
+
+  Question queryQuestionById(Long id);
+
+  void updateQuestion(Question question);
+
+  void updateViewCount(Long id);
 }

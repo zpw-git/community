@@ -1,5 +1,6 @@
 package com.zpw.community.sevice;
 
+import com.zpw.community.dto.GithubUser;
 import com.zpw.community.model.User;
 
 /**
@@ -11,4 +12,8 @@ public interface UserService {
   void addUser(User user);
 
   User findUserByToken(String Token);
+
+  User findUserByAccountId(String accountId);
+
+  User createOrUpdate(GithubUser githubUser);
 }

@@ -11,7 +11,7 @@ import lombok.Data;
 @Data
 public class Question {
   @Id
-  private Integer id;
+  private Long id;
   private String title;
   private String tag;
   private String description;

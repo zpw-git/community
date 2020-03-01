@@ -1,0 +1,107 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>my communite</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link rel="stylesheet" href="/layui/css/layui.css">
+  <link rel="stylesheet" href="/css/global.css">
+</head>
+<body>
+	<!--头部-->
+<div id="header"></div>
+
+<!--内容区-->
+<div class="layui-container fly-marginTop fly-user-main">
+  <ul class="layui-nav layui-nav-tree layui-inline" lay-filter="user">
+    <li class="layui-nav-item">
+      <a th:href="@{'/user/home/'+${session.user.accountId}}">
+        <i class="layui-icon">&#xe609;</i>
+        我的主页
+      </a>
+    </li>
+    <li class="layui-nav-item layui-this">
+      <a href="index.html">
+        <i class="layui-icon">&#xe612;</i>
+        用户中心
+      </a>
+    </li>
+    <li class="layui-nav-item">
+      <a href="set.html">
+        <i class="layui-icon">&#xe620;</i>
+        基本设置
+      </a>
+    </li>
+    <li class="layui-nav-item">
+      <a href="message.html">
+        <i class="layui-icon">&#xe611;</i>
+        我的消息
+      </a>
+    </li>
+  </ul>
+
+  <div class="site-tree-mobile layui-hide">
+    <i class="layui-icon">&#xe602;</i>
+  </div>
+  <div class="site-mobile-shade"></div>
+  
+  <div class="site-tree-mobile layui-hide">
+    <i class="layui-icon">&#xe602;</i>
+  </div>
+  <div class="site-mobile-shade"></div>
+  
+  
+  <div class="fly-panel fly-panel-user" pad20>
+    <!--
+    <div class="fly-msg" style="margin-top: 15px;">
+      您的邮箱尚未验证，这比较影响您的帐号安全，<a href="activate.html">立即去激活？</a>
+    </div>
+    -->
+    <div class="layui-tab layui-tab-brief" lay-filter="user">
+      <ul class="layui-tab-title" id="LAY_mine">
+        <li data-type="mine-jie" lay-id="index" class="layui-this">我发的帖（<span th:text="${questions.size()}">89</span>）</li>
+        <li data-type="collection" data-url="/collection/find/" lay-id="collection">我收藏的帖（<span>16</span>）</li>
+      </ul>
+      <div class="layui-tab-content" style="padding: 20px 0;">
+        <div class="layui-tab-item layui-show">
+          <ul class="jie-row">
+            <li th:each="question:${questions}">
+              <a class="jie-title" th:href="@{'/detail?questionid='+${question.id}}" target="_blank" th:text="${question.title}">基于 layui 的极简社区页面模版</a>
+              <i>2017/3/14 上午8:30:00</i>
+              <a class="mine-edit" th:href="@{'/edit?questionId='+${question.id}}">编辑</a>
+              <em><p th:text="${question.viewCount}"></p>阅/10答</em>
+            </li>
+          </ul>
+          <div id="LAY_page"></div>
+        </div>
+        <div class="layui-tab-item">
+          <ul class=" jie-row">
+            <li>
+              <a class="jie-title" href="../jie/detail.html" target="_blank">基于 layui 的极简社区页面模版</a>
+              <i>收藏于23小时前</i>  </li>
+          </ul>
+          <div id="LAY_page1"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--底部-->
+<div id="footer"></div>
+
+<script src="/layui/layui.js" ></script>
+<script>
+  //注意：导航 依赖 element 模块，否则无法进行功能性操作
+  layui.use(['element','jquery'], function(){
+    var element = layui.element;
+     var $ = layui.jquery;
+	$("#header").load("/header");
+	$("#footer").load("/footer");
+	
+  });
+</script>
+<script>
+	 
+</script>
+</body>
+</html>

@@ -1,7 +1,6 @@
 package com.zpw.community.provider;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.zpw.community.dto.AccessTokenDTO;
 import com.zpw.community.dto.GithubUser;
 import java.io.IOException;

@@ -5,17 +5,12 @@ import com.zpw.community.dto.GithubUser;
 import com.zpw.community.model.User;
 import com.zpw.community.provider.GithubProvider;
 import com.zpw.community.sevice.UserService;
-import java.lang.ProcessBuilder.Redirect;
-import java.util.UUID;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.xml.ws.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.HttpRequestHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.RestTemplate;
@@ -63,14 +58,8 @@ public class AuthotizeController {
     String accesstoken = githubProvider.getAccessTokenDTO(accessTokenDTO);
     GithubUser githubUser = githubProvider.githubUser(accesstoken);
     if(githubUser!=null){
-      User user = new User();
-      user.setAccountId(String.valueOf(githubUser.getId()));
-      user.setName(githubUser.getName());
-      user.setToken(UUID.randomUUID().toString());
-      user.setGmtCreate(System.currentTimeMillis());
-      user.setGmtModified(user.getGmtCreate());
-      user.setAvatarUrl(githubUser.getAvatar_url());
-      userService.addUser(user);
+      User user =  userService.createOrUpdate(githubUser);
+
       Cookie cookie = new Cookie("githubtoken", user.getToken());
       cookie.setMaxAge(3600);
       response.addCookie(cookie);

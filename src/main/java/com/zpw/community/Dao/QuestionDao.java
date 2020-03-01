@@ -12,8 +12,7 @@ import tk.mybatis.mapper.common.Mapper;
 @Component
 public interface QuestionDao extends Mapper<Question> {
 
-    List<Question> selectPage(Integer curr,Integer num);
+    Integer addViewCount(Long id);
 
-    Integer selectCount();
-
+    Integer addCommentCount(Long id);
 }

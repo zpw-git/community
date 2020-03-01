@@ -5,6 +5,10 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" href="layui/css/layui.css">
   <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap-theme.min.css">
+  <link rel="stylesheet" href="/bootstrap/css/bootstrap.min.css">
+  <script src="/js/jquery.min.js"></script>
+  <script src="/bootstrap/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<!--头部-->
@@ -29,8 +33,8 @@
         <span class="jie-admin" type="set" field="status" rank="0" style="background-color:#ccc;">取消加精</span> -->
         
         <div class="fly-list-hint"> 
-          <i class="iconfont" title="回答">&#xe60c;</i> 517
-          <i class="iconfont" title="人气">&#xe60b;</i> 98032
+          <i class="layui-icon layui-icon-reply-fill" title="回答" th:text="${question.question.commentCount}" style="color: #0C0C0C"></i>
+          <i class="layui-icon layui-icon-read" title="人气" th:text="${question.question.viewCount}" style="color: #0C0C0C" ></i>
         </div>
       </div>
       <div class="detail-about">
@@ -56,16 +60,15 @@
       </div>
       
       <a name="comment"></a>
-      <h2 class="page-title">热忱回答<span>（<em id="jiedaCount">18</em>）</span></h2>
+      <h2 class="page-title">热忱回答<span>（<em id="jiedaCount" th:text="${question.question.commentCount}">18</em>）</span></h2>
 
       <ul class="jieda photos" id="jieda">
-        <li data-id="12" class="jieda-daan">
-          <a name="item-121212121212"></a>
+        <li data-id="12" class="jieda-daan" th:each="commentDTO:${commentList}">
           <div class="detail-about detail-about-reply">
             <a class="jie-user" href="">
-              <img src="http://tp4.sinaimg.cn/1345566427/180/5730976522/0" alt="">
+              <img th:src="@{${commentDTO.user.avatarUrl}}" alt="">
               <cite>
-                <i>纸飞机</i>
+                <i th:text="${commentDTO.user.name}">纸飞机</i>
                 <!-- <em>(楼主)</em>
                 <em style="color:#5FB878">(管理员)</em>
                 <em style="color:#FF9E3F">（活雷锋）</em>
@@ -78,16 +81,14 @@
             <i class="layui-icon layui-icon-fire layui-col-md-offset10" style="font-size: 30px; color: red;" title="最佳答案"></i>
           </div>
           <div class="detail-body jieda-body">
-            <p>么么哒</p>
+            <p th:text="${commentDTO.comment.content}">么么哒</p>
           </div>
           <div class="jieda-reply">
             <span class="jieda-zan zanok" type="zan"><i class="layui-icon layui-icon-praise"></i><em>12</em></span>
-            <span type="reply"><i class="layui-icon layui-icon-reply-fill"></i>回复</span>
-            <!-- <div class="jieda-admin">
-              <span type="edit">编辑</span>
-              <span type="del">删除</span>
-              <span class="jieda-accept" type="accept">采纳</span>
-            </div> -->
+            <span type="reply" th:data-id="${commentDTO.comment.id}" onclick="collapseComments(this)" ><i class="layui-icon layui-icon-reply-fill"></i>回复</span>
+            <div class="collapse" th:id="${'comment-'+commentDTO.comment.id}">
+              二级评论：
+            </div>
           </div>
         </li>
         
@@ -123,15 +124,15 @@
       </ul>
       
       <div class="layui-form layui-form-pane">
-        <form action="/jie/reply/" method="post">
+        <form >
           <div class="layui-form-item layui-form-text">
             <div class="layui-input-block">
-              <textarea id="L_content" name="content" required lay-verify="required" placeholder="我要回答"  class="layui-textarea fly-editor" style="height: 150px;"></textarea>
+              <textarea  class="layui-textarea" id="content" lay-verify="required" required  name="content" placeholder="请输入内容"></textarea>
             </div>
           </div>
           <div class="layui-form-item">
-            <input type="hidden" name="jid" value="{{rows.id}}">
-            <button class="layui-btn" lay-filter="*" lay-submit>提交回答</button>
+            <input type="hidden" id="parentId" name="parentId" th:value="${question.question.id}">
+            <button class="layui-btn" lay-filter="commentForm" lay-submit>提交回答</button>
           </div>
         </form>
       </div>
@@ -225,16 +226,75 @@
 <script src="layui/layui.js" ></script>
 <script>
   //注意：导航 依赖 element 模块，否则无法进行功能性操作
-  layui.use(['element','jquery'], function(){
+  layui.use(['element','jquery','form','layer'], function(){
     var element = layui.element;
      var $ = layui.jquery;
+     var form = layui.form;
+     var layer = layui.layer;
 	$("#header").load("header");
 	$("#footer").load("footer");
     //…
+    form.on('submit(commentForm)', function(data) {
+      data.field.type=1;
+      console.log(data.field);
+      $.ajax({
+        url: '/comment',
+        type: 'post',
+        dataType: 'JSON',
+        contentType:'application/json',
+        data: JSON.stringify(data.field),
+        success: function (res) {
+          if (res.code==200) {
+            layer.msg(res.message);
+          } else{
+            layer.open({
+              title:''
+              ,anim: 6
+              ,content: res.message
+              ,btn: [ '登录']
+              ,yes: function(index, layero){
+                window.localStorage.setItem("closeable",true);
+                window.open("https://github.com/login/oauth/authorize?client_id=5f57e6278bddc120b3b1&redirect_id=http://localhost:8887/callback&scope=user&state=1");
+
+                layer.closeAll();
+              }
+            });
+          }
+
+        },
+        error: function () {
+
+        }
+      });
+      return false;
+    });
   });
 </script>
 <script>
-	 
+
+  /**
+   * 展开二级评论
+   */
+
+  function collapseComments(e) {
+
+    var id = e.getAttribute("data-id");
+    var comments = $("#comment-"+id);
+    //获取一下二级评论的展开状态
+    var collapse = e.getAttribute("data-collapse");
+    if(collapse){
+      //折叠二级评论
+      comments.removeClass("in");
+      e.removeAttribute("data-collapse");
+    }else{
+      //展开二级评论
+      comments.addClass("in");
+      //标记二级评论展开状态
+      e.setAttribute("data-collapse","in");
+    }
+
+
+  }
 </script>
 </body>
 </html>

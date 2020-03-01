@@ -1,17 +1,13 @@
 package com.zpw.community.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.zpw.community.dto.PageDTO;
 import com.zpw.community.model.Question;
 import com.zpw.community.sevice.QuestionService;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author: zhangpengwei
@@ -26,13 +22,27 @@ public class PublishController {
   @PostMapping("/addpublish")
   @ResponseBody
   public Map<String,Object> publishQuestion(Question question){
-    question.setGmtCreate(System.currentTimeMillis());
-    question.setGmtModified(question.getGmtCreate());
-    questionService.addQuestion(question);
-    Map<String, Object> map = new HashMap<>();
-    map.put("status",true);
-    map.put("msg","成功添加");
-    return map;
+    if(question.getId()==null){
+      question.setGmtCreate(System.currentTimeMillis());
+      question.setGmtModified(question.getGmtCreate());
+      question.setLikeCount(0);
+      question.setCommentCount(0);
+      question.setViewCount(0);
+      questionService.addQuestion(question);
+      Map<String, Object> map = new HashMap<>();
+      map.put("status",true);
+      map.put("msg","成功添加");
+      return map;
+    }else{
+      question.setGmtModified(System.currentTimeMillis());
+      questionService.updateQuestion(question);
+      Map<String, Object> map = new HashMap<>();
+      map.put("status",true);
+      map.put("msg","修改成功");
+      return map;
+    }
+
+
 
   }
 
